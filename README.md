@@ -71,9 +71,20 @@ Additionally, the other clusters are also compact and exhibit some degree of sep
 
 **Figure_5.** "Cluster Visualization of Food Sales""
 
+The Silhouette Score and Davies-Bouldin Score are well-known metrics for assessing the separation and compactness of data in clusters. Both metrics were used in this analysis, and high scores were achieved:
+
+- Silhouette Score: 0.7 (with 1 being the highest)
+- Davies-Bouldin Score: 0.4 (with 0 being the highest)
+
+These high-performance metrics indicate that the new menus, designed based on historical customer data patterns, are likely to meet expectations and satisfy customer needs.
 
 
-
+**How the analysis could be improved further ?**
+-External Validation
+-Experiment with Different Algorithms (Hierarchical Clustering or DBSCAN)
+-Hyperparameter Tuning
+-Check outliers further
+-Explore feature engineering to create new features or transform existing ones
 
 
 
