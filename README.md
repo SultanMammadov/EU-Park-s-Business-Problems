@@ -1,6 +1,6 @@
 # EU-Park's Business Problems  
     
-**Introduction:** 
+**Introduction:**  
 EU Park is an amusement park that hosts many visitors daily. Recently, visitor satisfaction has declined due to long queues and inadequate restaurant menus.
 Factors such as the day of the week, weather, temperature, and attraction popularity contribute to the long wait times.
 Additionally, the restaurants are unable to offer customized menus because customer purchase patterns have not been analyzed.
