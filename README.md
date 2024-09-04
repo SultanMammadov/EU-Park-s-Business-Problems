@@ -11,7 +11,7 @@ These issues can be resolved by applying data analysis to the historical dataset
 -Which combinations of food items are most popular?
 
 **Data Collection:** The dataset is synthetic.
-
+ 
 **1st Model:** XGBRegressor:
 
 The below correlation matrix displays the relationships between various variables in a dataset. 
