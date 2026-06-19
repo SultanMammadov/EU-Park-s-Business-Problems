@@ -45,7 +45,9 @@ The bar chart displays the contribution level of each feature to the model's out
 "Hour" is the most important feature, as it has a strong relationship with Wait Time in the correlation matrix as well. 
 "Day of Week" and "Attraction Type" are also significant factors influencing the model's output.
 
-![image](https://github.com/user-attachments/assets/88923918-e406-4761-8d2e-ec266f6413bc)
+<img width="703" height="473" alt="download" src="https://github.com/user-attachments/assets/7fbb139e-1b32-4c6e-b74c-6a5a1eed6704" />
+<img width="922" height="550" alt="download" src="https://github.com/user-attachments/assets/4b0a0a2a-1818-4fc8-8073-80db6dc44bfb" />
+
 
 **Figure_3.** "Feature Importance for XGB Regressor"
 
