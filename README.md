@@ -24,7 +24,7 @@ The relationships between other variables are very weak.
 **Figure_1.** "Correlation Matrix of all variables"
 
 The graph below shows the predictions of the XGB Regressor compared to the actual values. 
-There is noticeable dispersion and outliers around the red prediction line, but a strong linear relationship is evident as most data points are close to the line.
+There is noticeable dispersion and outliers around the blue prediction line, but a strong linear relationship is evident as most data points are close to the line.
 The below performance measurements confirm the strength of this relationship:
 
 Mean Absolute Error (MAE): 2.68
