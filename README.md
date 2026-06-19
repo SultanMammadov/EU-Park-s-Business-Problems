@@ -19,7 +19,7 @@ It shows correlation coefficients that measure the strength and direction of the
 There is a moderate relationship between Hour and Wait Time (0.36), indicating that wait times increase as the evening approaches. 
 The relationships between other variables are very weak.
 
-![image](https://github.com/user-attachments/assets/b40f3bb2-3ac4-48f6-8ded-ec21675d495a)
+<img width="711" height="609" alt="download" src="https://github.com/user-attachments/assets/94baee23-365c-42dd-9b1a-c6cbddace034" />
 
 **Figure_1.** "Correlation Matrix of all variables"
 
