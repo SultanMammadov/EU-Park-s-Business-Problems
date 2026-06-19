@@ -37,7 +37,7 @@ R-squared Score: 0.93
 
 These metrics indicate a strong linear relationship, which may be due to the advanced learning capabilities of the XGB Regressor compared to a standard linear model.
 
-![image](https://github.com/user-attachments/assets/7b94540c-eabb-4bd2-87df-64eebc28f4b7)
+<img width="690" height="550" alt="download" src="https://github.com/user-attachments/assets/8e8007c3-7fd0-4939-a4a0-bee50b3e47d0" />
 
 **Figure_2.** "Predictions vs Actual Values"
 
