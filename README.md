@@ -21,6 +21,7 @@ Figure_1. "Before Outliers Removal"
 The figure below shows the distribution of waiting times after removing outliers.
 
 <img width="879" height="473" alt="download" src="https://github.com/user-attachments/assets/ba7db7a6-ed65-4033-8fac-2d1961e1d12f" />
+
 Figure_2. "After Outliers Removal"
 
 Before cleaning, the wait time data showed extreme outliers reaching up to 20,000, with most observations clustered near zero. 
