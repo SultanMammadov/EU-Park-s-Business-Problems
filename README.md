@@ -6,9 +6,10 @@ Factors such as the day of the week, weather, temperature, and attraction popula
 Additionally, the restaurants are unable to offer customized menus because customer purchase patterns have not been analyzed.
 These issues can be resolved by applying data analysis to the historical dataset.
 
-**Objective:** The goal of this project is to address the following business issues:
--How can we predict wait times, and what factors influence them?
--Which combinations of food items are most popular?
+**Objective:** The goal of this project is to address the following business problems:
+
+1. How can we predict wait times, and what factors influence them?
+2. Which combinations of food items are most popular?
 
 **Data Collection:** The dataset is synthetic.
 
@@ -102,23 +103,25 @@ The Silhouette Score and Davies-Bouldin Score are well-known metrics for assessi
 These high-performance metrics indicate that the new menus, designed based on historical customer data patterns, are likely to meet expectations and satisfy customer needs.
 
 
+**Business problems:**
+
+1. How can we predict wait times, and what factors influence them?
+   
+The XGBoost Regression model enables the business to predict future wait times in advance, allowing proactive measures to be taken to maintain high customer satisfaction.
+The feature importance analysis further revealed that the hour of the day, day of the week, and the specific attraction are the primary drivers of wait time, providing actionable insights for better crowd and queue management.
+
+2. Which combinations of food items are most popular?
+
+The KMeans model identified 4 distinct food combination clusters, each representing a different customer preference group:
+Cluster 1 – Health-Conscious Visitors predominantly order Water, Veggie Burger, Salad, and Juice, each accounting for 15–17% of orders. This group clearly favours light, healthy options.
+Cluster 2 – Snack & Drinks Lovers gravitate towards Nachos, Pretzel, Cocktail, Wine, and Beer, each contributing around 14–15% of orders. This group prefers savoury snacks paired with alcoholic beverages.
+Cluster 3 – Classic Comfort Food customers consistently order Hamburger, Cheeseburger, Fries, and Soft Drink, each at approximately 16% of orders — a traditional fast-food combination that remains highly popular.
+Cluster 4 – Sweet Treat Seekers favour Cookie, Coffee, Tea, and Cupcake, each ranging between 15–16% of orders, suggesting a group that visits primarily for desserts and hot beverages.
+
+
 **How the analysis could be improved further ?**
 -External Validation
 -Experiment with Different Algorithms (Hierarchical Clustering or DBSCAN)
 -Hyperparameter Tuning
 -Check outliers further
--Explore feature engineering to create new features or transform existing ones
-
-
-                                        
-
-
-
-
-
-
-
-
-
-
-
+-Explore feature engineering to create new features or transform existing ones      
