@@ -123,8 +123,8 @@ Cluster 4 – Sweet Treat Seekers favour Cookie, Coffee, Tea, and Cupcake, each 
 
 
 **How the analysis could be improved further ?**
--External Validation
--Experiment with Different Algorithms (Hierarchical Clustering or DBSCAN)
--Hyperparameter Tuning
--Check outliers further
--Explore feature engineering to create new features or transform existing ones      
+- External Validation
+- Experiment with Different Algorithms (Hierarchical Clustering or DBSCAN)
+- Hyperparameter Tuning
+- Check outliers further
+- Explore feature engineering to create new features or transform existing ones      
