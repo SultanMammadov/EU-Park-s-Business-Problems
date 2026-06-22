@@ -16,9 +16,12 @@ The data is clean and does not need any imputation. The outliers are visualised 
 
 <img width="799" height="391" alt="download" src="https://github.com/user-attachments/assets/019cde44-f2d1-45cb-a775-27a694b853eb" />
 
+**Figure_1.** "Before Outliers Removal"
+
 The figure below shows the distribution of waiting times after removing outliers.
 
 <img width="879" height="473" alt="download" src="https://github.com/user-attachments/assets/ba7db7a6-ed65-4033-8fac-2d1961e1d12f" />
+**Figure_2.** "After Outliers Removal"
 
 Before cleaning, the wait time data showed extreme outliers reaching up to 20,000, with most observations clustered near zero. 
 After removing these outliers, the distribution becomes much clearer — the majority of wait times fall between 4 and 5, with a secondary concentration observed between 15 and 35. The data still exhibits a right-skewed, bimodal pattern, hinting at two distinct subgroups that are worth exploring further in the analysis.
@@ -33,7 +36,7 @@ The relationships between other variables are very weak.
 
 <img width="711" height="609" alt="download" src="https://github.com/user-attachments/assets/94baee23-365c-42dd-9b1a-c6cbddace034" />
 
-**Figure_1.** "Correlation Matrix of all variables"
+**Figure_3.** "Correlation Matrix of all variables"
 
 The graph below shows the predictions of the XGB Regressor compared to the actual values. 
 There is noticeable dispersion and outliers around the blue prediction line, but a strong linear relationship is evident as most data points are close to the line.
@@ -51,7 +54,7 @@ These metrics indicate a strong linear relationship, which may be due to the adv
 
 <img width="690" height="550" alt="download" src="https://github.com/user-attachments/assets/8e8007c3-7fd0-4939-a4a0-bee50b3e47d0" />
 
-**Figure_2.** "Predictions vs Actual Values"
+**Figure_4.** "Predictions vs Actual Values"
 
 The bar chart displays the contribution level of each feature to the model's output. 
 "Hour" is the most important feature, as it has a strong relationship with Wait Time in the correlation matrix as well. 
@@ -61,7 +64,7 @@ The bar chart displays the contribution level of each feature to the model's out
 <img width="922" height="550" alt="download" src="https://github.com/user-attachments/assets/4b0a0a2a-1818-4fc8-8073-80db6dc44bfb" />
 
 
-**Figure_3.** "Feature Importance for XGB Regressor"
+**Figure_5.** "Feature Importance for XGB Regressor"
 
 
 
@@ -76,14 +79,14 @@ The relationship between the number of clusters and the Sum of Squared Distances
 
 ![image](https://github.com/user-attachments/assets/8477480f-4140-414c-98a6-789ae36d1865)
 
-**Figure_4.** "Elbow Method"
+**Figure_6.** "Elbow Method"
 
 The visualization below shows that the 2nd cluster is highly compact and well-separated from the other clusters, making it a particularly reliable cluster for menu creation in this business case. 
 Additionally, the other clusters are also compact and exhibit some degree of separation from each other, further supporting their viability for distinct menu combinations.
 
 ![image](https://github.com/user-attachments/assets/198741d0-2a4b-4e26-9094-fe0a6dba9e8b)
 
-**Figure_5.** "Cluster Visualization of Food Sales""
+**Figure_7.** "Cluster Visualization of Food Sales""
 
 The Silhouette Score and Davies-Bouldin Score are well-known metrics for assessing the separation and compactness of data in clusters. Both metrics were used in this analysis, and high scores were achieved:
 
