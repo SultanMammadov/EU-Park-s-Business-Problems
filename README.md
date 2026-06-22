@@ -28,8 +28,6 @@ Before cleaning, the wait time data showed extreme outliers reaching up to 20,00
 After removing these outliers, the distribution becomes much clearer — the majority of wait times fall between 4 and 5, with a secondary concentration observed between 15 and 35. The data still exhibits a right-skewed, bimodal pattern, hinting at two distinct subgroups that are worth exploring further in the analysis.
 
  
-**1st Model:** XGBRegressor:
-
 The below correlation matrix displays the relationships between various variables in a dataset. 
 It shows correlation coefficients that measure the strength and direction of these relationships. 
 There is a moderate relationship between Hour and Wait Time (0.36), indicating that wait times increase as the evening approaches. 
@@ -38,6 +36,8 @@ The relationships between other variables are very weak.
 <img width="711" height="609" alt="download" src="https://github.com/user-attachments/assets/94baee23-365c-42dd-9b1a-c6cbddace034" />
 
 **Figure_3.** "Correlation Matrix of all variables"
+
+**1st Model:** XGBRegressor:
 
 The graph below shows the predictions of the XGB Regressor compared to the actual values. 
 There is noticeable dispersion and outliers around the blue prediction line, but a strong linear relationship is evident as most data points are close to the line.
