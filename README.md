@@ -37,6 +37,11 @@ The relationships between other variables are very weak.
 
 **Figure_3.** "Correlation Matrix of all variables"
 
+**Feature engineering:**
+
+Feature engineering was applied to transform categorical variables into numerical format suitable for machine learning models. Days of the week were mapped to ordered numerical values from 1 (Monday) to 7 (Sunday), preserving their natural sequence. Label Encoding was then applied to the remaining categorical columns — Attraction, Rain, and Date — converting each unique category into a corresponding numerical value. This step ensures that the model can interpret and process all variables effectively, as most algorithms require numerical input. Together, these transformations prepare the dataset for reliable and accurate model training.
+
+
 **1st Model:** XGBRegressor:
 
 The graph below shows the predictions of the XGB Regressor compared to the actual values. 
