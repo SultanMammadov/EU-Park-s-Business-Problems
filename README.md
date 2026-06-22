@@ -16,12 +16,12 @@ The data is clean and does not need any imputation. The outliers are visualised 
 
 <img width="799" height="391" alt="download" src="https://github.com/user-attachments/assets/019cde44-f2d1-45cb-a775-27a694b853eb" />
 
-**Figure_1.** "Before Outliers Removal"
+Figure_1. "Before Outliers Removal"
 
 The figure below shows the distribution of waiting times after removing outliers.
 
 <img width="879" height="473" alt="download" src="https://github.com/user-attachments/assets/ba7db7a6-ed65-4033-8fac-2d1961e1d12f" />
-**Figure_2.** "After Outliers Removal"
+Figure_2. "After Outliers Removal"
 
 Before cleaning, the wait time data showed extreme outliers reaching up to 20,000, with most observations clustered near zero. 
 After removing these outliers, the distribution becomes much clearer — the majority of wait times fall between 4 and 5, with a secondary concentration observed between 15 and 35. The data still exhibits a right-skewed, bimodal pattern, hinting at two distinct subgroups that are worth exploring further in the analysis.
