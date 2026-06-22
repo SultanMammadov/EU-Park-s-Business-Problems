@@ -1,20 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Sultan Mammadov
-
-# # Import Libraries
-
-# In[2]:
-
-
 pip install feature_engine
 
-
-# In[2]:
-
+# Import Libraries
 
 # Data Manipulation
+import os
 import pandas as pd
 import numpy as np
 
@@ -22,237 +11,239 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Machine Learning
-import xgboost as xgb
-from sklearn.model_selection import train_test_split, cross_val_score, KFold
-from sklearn import datasets
-from xgboost import XGBRegressor
-
-from sklearn.metrics import silhouette_score, davies_bouldin_score, accuracy_score, classification_report, confusion_matrix, balanced_accuracy_score, mean_squared_error,mean_absolute_error, r2_score
+# Machine Learning 
+from sklearn.model_selection import (train_test_split, cross_val_score, KFold)
 from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
+from sklearn.tree import DecisionTreeClassifier, plot_tree as sklearn_plot_tree
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import (XGBRegressor, XGBClassifier, plot_tree as xgb_plot_tree)
 
+# Model Evaluation
+from sklearn.metrics import (accuracy_score, classification_report, confusion_matrix, 
+                             balanced_accuracy_score, mean_squared_error, r2_score,
+                             silhouette_score, davies_bouldin_score, mean_absolute_error,
+                             mean_squared_error,
+                             r2_score)
 # Feature Selection
-from sklearn.feature_selection import mutual_info_classif, mutual_info_regression
+from sklearn.feature_selection import (mutual_info_classif, mutual_info_regression)
 
 # Feature Engineering
-from sklearn.preprocessing import LabelEncoder
-from feature_engine.encoding import RareLabelEncoder, OrdinalEncoder
+from sklearn.preprocessing import (LabelEncoder, minmax_scale)
+from feature_engine.encoding import (RareLabelEncoder, OrdinalEncoder)
 
-# Miscellaneous
-from sklearn.preprocessing import minmax_scale
+# Dimensionality Reduction
+from sklearn.decomposition import PCA
+
+# Statistics
 from scipy.stats import zscore
 
-
-# # Data Import
-
-# In[3]:
-
-
 # Data Import
-attractions = pd.read_csv("EU-park.csv")
-customers = pd.read_csv("EU-Park-Customers.csv")
-food = pd.read_csv("EU_park_food_sales.csv")
+path = input("Enter the path where the input files are saved: ")
+
+# attractions in EU-park file
+attractions_file = "EU-park.csv"
+attractions_full_path = os.path.join(path, attractions_file)
+attractions = pd.read_csv(attractions_full_path)
+
+# food order details in EU_park_food_sales
+food_file = "EU_park_food_sales.csv"
+food_full_path = os.path.join(path, food_file)
+food = pd.read_csv(food_full_path)
 
 
-# # Data Cleaning
-
-# In[4]:
-
+# Data Cleaning
 
 # Check if there are any NULL values
 print("Attractions", attractions.isnull().sum(), "\n")
-print("Customers", customers.isnull().sum(), "\n")
 print("Food", food.isnull().sum())
 
 
-# In[8]:
+# Before Removing Negative Waiting Times
+initial_length = len(attractions)
 
+print(f"Initial dataset length: {initial_length}")
 
-# Assuming 'customers' is DataFrame
-distance_data = customers[' Distance_from_Park_km ']
+# Describe dataset
+display(attractions.describe())
 
-# Set the style for the plot
-sns.set(style = "whitegrid")
+# Remove Negative Wait Times
+negative_values = attractions.loc[attractions["WaitTime"] < 0, "WaitTime"]
 
-# Create a histogram
-plt.figure(figsize = (10, 6))
-sns.histplot(distance_data, bins = 30, kde = True, color = 'skyblue')
+negative_percentage = len(negative_values) / initial_length * 100
 
-# Add labels and title
-plt.title('Distribution of Distance from Park')
-plt.xlabel('Distance (km)')
-plt.ylabel('Frequency')
+print(f"Negative WaitTime values: {len(negative_values)} " f"({negative_percentage:.2f}%)")
 
-# Show the plot
-plt.show()
+# Keep only valid WaitTime values
+attractions_clean = attractions[attractions["WaitTime"] >= 0].copy()
 
+# Outlier Detection using IQR
 
-# # XGBRegressor Model
+Q1 = attractions_clean["WaitTime"].quantile(0.25)
+Q3 = attractions_clean["WaitTime"].quantile(0.75)
 
-# ### Predict wait times and understand what impacts wait times
-
-# In[9]:
-
-
-# Initial length of the dataset
-len_atraction = len(attractions)
-print("Length of the initial file: ", len_atraction)
-
-attractions.describe()
-
-# Finding negative numbers in the 'Attraction' column
-negative_numbers = attractions[attractions['WaitTime'] < 0]['WaitTime']
-print("Percent of negative numbers in WaitTime: ", len(negative_numbers), ", this is ", round(len(negative_numbers)/len(attractions)*100,2), "%")
-
-# Deleted negative numbers
-attractions_updated = attractions[attractions['WaitTime'] >= 0]
-
-#Interquartile Range (IQR) Method:
-
-#Calculate the IQR, which is the difference between the 75th percentile (Q3) and the 25th percentile (Q1).
-#Define a threshold for outliers, for example, values outside the range [Q1 - 1.5 * IQR, Q3 + 1.5 * IQR].
-#Values outside this range can be considered outliers and can be treated accordingly (e.g., removed or adjusted).
-
-Q1 = attractions['WaitTime'].quantile(0.25)
-Q3 = attractions['WaitTime'].quantile(0.75)
 IQR = Q3 - Q1
 
-# Define the threshold for outliers
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
-# Boxplot for visual inspection
-sns.boxplot(x=attractions['WaitTime'])
+print(f"Lower bound: {lower_bound:.2f}")
+print(f"Upper bound: {upper_bound:.2f}")
+
+
+# Visualize before removing outliers
+plt.figure(figsize=(10,4))
+
+sns.boxplot(x=attractions_clean["WaitTime"])
+
+plt.title("WaitTime Distribution - Before Outlier Removal")
 plt.show()
 
-# Histogram for visual inspection
-sns.histplot(attractions['WaitTime'], bins=30, kde=True)
+
+plt.figure(figsize = (10, 5))
+sns.histplot(attractions_clean["WaitTime"], bins = 30, kde = True)
+
+plt.title("WaitTime Distribution")
+plt.xlabel("Wait Time")
+plt.ylabel("Frequency")
 plt.show()
 
-# Identify and handle outliers
-# outliers = attractions_updated[(attractions_updated['WaitTime'] < lower_bound) | (attractions_updated['WaitTime'] > upper_bound)]
 
-# Create a boolean mask for outliers
-outlier_mask = (attractions_updated['WaitTime'] < lower_bound) | (attractions_updated['WaitTime'] > upper_bound)
+# Remove outliers
+outlier_mask = ((attractions_clean["WaitTime"] < lower_bound) | (attractions_clean["WaitTime"] > upper_bound))
+outliers_removed = attractions_clean[outlier_mask]
 
-# Remove rows with outliers
-attractions_no_outliers = attractions_updated[~outlier_mask]
+attractions_clean = attractions_clean[~outlier_mask].copy()
+print(f"Outliers removed: {len(outliers_removed)}")
 
-# Distribution plot for the 'WaitTime' column after removing outliers
-sns.histplot(attractions_no_outliers['WaitTime'], bins=30, kde=True)
-plt.title('Distribution of WaitTime without Outliers and negative values')
-plt.xlabel('WaitTime')
-plt.ylabel('Frequency')
+deleted_percentage = ((initial_length - len(attractions_clean)) / initial_length * 100)
+print(f"Total removed values: {deleted_percentage:.2f}%")
+
+
+# Distribution After Cleaning
+
+plt.figure(figsize = (10, 5))
+
+sns.histplot(attractions_clean["WaitTime"], bins = 30, kde = True)
+
+plt.title("WaitTime Distribution After Cleaning")
+
+plt.xlabel("Wait Time")
+plt.ylabel("Frequency")
+
 plt.show()
 
-print("Percent of deleted values: ", round((100 - len(attractions_no_outliers)/len_atraction*100), 2), "%")
 
-#len(attractions_no_outliers)
-# Native labeling
-attractions_no_outliers['DayOfWeek'].replace(['Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday'], [3,4,5,6,7,1,2], inplace=True)
+# Feature Engineering
 
-# Delete Date column
-#attractions_no_outliers.drop(columns="Date", inplace = True)
+# Convert days into numerical values
+day_mapping = {
+    "Monday": 1,
+    "Tuesday": 2,
+    "Wednesday": 3,
+    "Thursday": 4,
+    "Friday": 5,
+    "Saturday": 6,
+    "Sunday": 7}
 
-# Create LabelEncoder instances
-le_Attraction = LabelEncoder()
-le_Date = LabelEncoder()
+attractions_clean["DayOfWeek"] = (attractions_clean["DayOfWeek"].replace(day_mapping))
 
-# Fit and transform each column
-attractions_no_outliers['Attraction'] = le_Attraction.fit_transform(attractions_no_outliers['Attraction'])
-attractions_no_outliers['Date'] = le_Date.fit_transform(attractions_no_outliers['Date'])
+# Label Encoding for categorical variables
+label_encoder_attraction = LabelEncoder()
 
-attractions_no_outliers.head()
+attractions_clean["Attraction"] = (label_encoder_attraction.fit_transform(attractions_clean["Attraction"]))
+attractions_clean["Rain"] = (label_encoder_attraction.fit_transform(attractions_clean["Rain"]))
+attractions_clean["Date"] = (label_encoder_attraction.fit_transform(attractions_clean["Date"]))
 
-# Prepare mask
-matrix = attractions_no_outliers.corr().round(2)
-mask = np.triu(np.ones_like(matrix, dtype=bool))
+display(attractions_clean.head())
 
-# Build
-sns.heatmap(matrix, annot = True, vmax = 1, vmin = -1, cmap = 'vlag', mask = mask)
+# Correlation Matrix
+corr_matrix = attractions_clean.corr()
 
-#Train Test Split
-x, y = attractions_no_outliers.drop('WaitTime', axis = 1),  attractions_no_outliers['WaitTime']
-xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size = 0.2, random_state = 42)
-
-#XGBRegressor()
-xgbr = xgb.XGBRegressor()
-
-xgbr.fit(xtrain, ytrain)
-pred = xgbr.predict(xtest)
-
-score = xgbr.score(xtrain, ytrain)
-print("Training score: ", score)
-
-# - cross validataion
-scores = cross_val_score(xgbr, xtrain, ytrain, cv=5)
-print("Mean cross-validation score: %.2f" % scores.mean())
-
-mae = mean_absolute_error(ytest, pred)
-print('MAE: ' + str(mae))
-
-mse = mean_squared_error(ytest, pred)
-print("RMSE: %.4f" % (mse**(1/2.0)))
-print("MSE: %.6f" % mse)
-
-#r^2
-r2 = r2_score(ytest, pred)
-
-print("R-squared Score:", r2)
-
-# Visualizing the performance
-plt.figure(figsize = (10, 6))  # Adjust the figure size as needed
-plt.scatter(ytest, pred, alpha = 0.5, c = 'blue', label = 'Actual vs. Predicted')
-plt.plot([min(ytest), max(ytest)], [min(ytest), max(ytest)], linestyle = '--', color = 'red', linewidth = 2, label = 'Perfect Prediction')
-plt.title('XGB.Regressor: Predictions vs. Actual Values')
-plt.xlabel('Actual WaitTime')
-plt.ylabel('Predicted WaitTime')
-plt.legend()
-plt.tight_layout()  # Adjust layout to prevent overlapping
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Matrix')
 plt.show()
 
-# Calculate feature importance
-feature_importance = xgbr.feature_importances_
 
-# Sort features based on importance
-sorted_idx = feature_importance.argsort()[::-1]
+#Model - XGBoost Regression
+#predict wait times and understand what impacts wait times¶
 
-# Plot feature importance
-plt.figure(figsize = (12, 6))
+# Prepare Data for Model
 
-# Bar plot for individual feature importance
-plt.subplot(1, 2, 1)
-sns.barplot(x = feature_importance[sorted_idx], y = x.columns[sorted_idx], palette = 'viridis')
-plt.xlabel('Importance')
-plt.ylabel('Feature')
-plt.title('Feature Importance for XGBRegressor')
+X = attractions_clean.drop("WaitTime", axis = 1)
+
+y = attractions_clean["WaitTime"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+# XGBoost Regression Model
+
+xgbr = XGBRegressor(random_state = 42)
+
+xgbr.fit(X_train, y_train)
+
+predictions = xgbr.predict(X_test)
+predictions
+
+# Model Evaluation
+train_score = xgbr.score( X_train, y_train)
+print(f"Training R² Score: {train_score:.4f}")
+
+cv_scores = cross_val_score(xgbr, X_train, y_train, cv = 5)
+print(f"Cross Validation Mean Score: {cv_scores.mean():.4f}")
+
+mae = mean_absolute_error(y_test, predictions)
+mse = mean_squared_error(y_test, predictions)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, predictions)
+
+print(f"MAE : {mae:.4f}")
+print(f"MSE : {mse:.4f}")
+print(f"RMSE: {rmse:.4f}")
+print(f"R²  : {r2:.4f}")
+
+# Actual vs Predicted Plot
+
+plt.figure(figsize=(8,6))
+plt.scatter(y_test, predictions, alpha=0.5)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], linestyle="--")
+
+plt.title("XGBoost Regression: Actual vs Predicted")
+plt.xlabel("Actual WaitTime")
+plt.ylabel("Predicted WaitTime")
+plt.show()
+
+# Feature Importance
+
+feature_importance = (xgbr.feature_importances_)
+importance_df = pd.DataFrame({"Feature": X.columns, "Importance": feature_importance})
+importance_df = (importance_df.sort_values("Importance", ascending=False))
+
+plt.figure(figsize=(10,6))
+sns.barplot(data=importance_df, x="Importance", y="Feature")
+plt.title("XGBoost Feature Importance")
+plt.show()
+
+
+# Cumulative Feature Importance
+
+importance_df["Cumulative"] = (importance_df["Importance"].cumsum())
+
+plt.figure(figsize=(8,5))
+sns.lineplot(data=importance_df, x=range(1, len(importance_df)+1), y="Cumulative")
+plt.xlabel("Number of Features")
+plt.ylabel("Cumulative Importance")
+plt.title("Cumulative Feature Importance")
 plt.grid(True)
-
-# Cumulative importance plot
-cumulative_importance = np.cumsum(feature_importance[sorted_idx])
-plt.subplot(1, 2, 2)
-sns.lineplot(x = range(1, len(cumulative_importance) + 1), y = cumulative_importance, color = 'orange')
-plt.xlabel('Number of Features')
-plt.ylabel('Cumulative Importance')
-plt.title('Cumulative Feature Importance')
-plt.grid(True)
-
-plt.tight_layout()
 plt.show()
 
 
-# ### KMeans Model
-
-# ### If there is a group structure in the purchase then behavior that could drive the special offer for menu combinations
-
-# In[10]:
-
-
-# Data Import
-food = pd.read_csv("EU_park_food_sales.csv")
+# Preparation and Model - KMeans
+# if there is a group structure in the purchase
+# behavior that could drive the special offer for menu combinations
 
 # Determining the optimal number of clusters using the elbow method
+
 SSE = []
 k_range = range(1, 11)  # Trying with 1 to 10 clusters
 
@@ -262,8 +253,8 @@ for k in k_range:
     SSE.append(model.inertia_)
 
 # Plotting the Elbow Method Graph
-plt.figure(figsize=(10, 6))
-plt.plot(k_range, SSE, marker='o', c='red')
+plt.figure(figsize = (10, 6))
+plt.plot(k_range, SSE, marker = 'o', c = 'red')
 
 plt.title('Elbow Method to Determine Optimal Number of Clusters')
 plt.xlabel('Number of clusters')
@@ -275,6 +266,7 @@ plt.grid(True)
 
 plt.show()
 
+
 # Applying PCA to reduce the data to two dimensions
 pca = PCA(n_components = 2)
 data_2d = pca.fit_transform(food)
@@ -285,9 +277,9 @@ clusters = model.fit_predict(data_2d)
 
 # Plotting the clusters
 plt.figure(figsize=(10, 6))
-plt.scatter(data_2d[:, 0], data_2d[:, 1], c = clusters, cmap='viridis', marker='o')
+plt.scatter(data_2d[:, 0], data_2d[:, 1], c = clusters, cmap = 'viridis', marker = 'o')
 
-#plt.scatter(model.cluster_centers_[:,0], model.cluster_centers_[:,1], c = 'red', marker = "D", s = 100) # put centers
+# plt.scatter(model.cluster_centers_[:,0], model.cluster_centers_[:,1], c = 'red', marker = "D", s = 100) # put centers
 
 # Annotate cluster centers with numbers [0, 1, 2, 3]
 for i, center in enumerate(model.cluster_centers_):
@@ -365,7 +357,14 @@ dbs = round(davies_bouldin_score(data_2d, clusters),2)
 print('Davies Bouldin Score: '+ str(dbs))
 
 
-# In[ ]:
+
+
+
+
+
+
+
+
 
 
 
