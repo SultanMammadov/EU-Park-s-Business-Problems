@@ -115,11 +115,8 @@ The feature importance analysis further revealed that the hour of the day, day o
 The KMeans model identified 4 distinct food combination clusters, each representing a different customer preference group:
 
 Cluster 1 – Health-Conscious Visitors predominantly order Water, Veggie Burger, Salad, and Juice, each accounting for 15–17% of orders. This group clearly favours light, healthy options.
-
 Cluster 2 – Snack & Drinks Lovers gravitate towards Nachos, Pretzel, Cocktail, Wine, and Beer, each contributing around 14–15% of orders. This group prefers savoury snacks paired with alcoholic beverages.
-
 Cluster 3 – Classic Comfort Food customers consistently order Hamburger, Cheeseburger, Fries, and Soft Drink, each at approximately 16% of orders — a traditional fast-food combination that remains highly popular.
-
 Cluster 4 – Sweet Treat Seekers favour Cookie, Coffee, Tea, and Cupcake, each ranging between 15–16% of orders, suggesting a group that visits primarily for desserts and hot beverages.
 
 
